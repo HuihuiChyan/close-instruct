@@ -7,7 +7,7 @@
 3. 还支持创建或者合并模型权重差值；
 
 在原始的open-instruct基础上，我添加了下面的功能：
-1. 调用公司的GPT4接口进行alpaca_eval或者mt_bench的评测；
+1. 调用GPT4接口进行alpaca_eval或者mt_bench的评测；
 2. 从训好的lora模型中取出一条数据对应的lora_embedding；
 
 ## 准备工作
