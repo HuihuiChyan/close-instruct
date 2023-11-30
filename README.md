@@ -206,6 +206,39 @@ accelerate launch --mixed_precision bf16 ./eval/fetch_lora_embeds.py \
     --pool-manner "max_pool"
 ```
 
+## 不确定性度量
+可以执行下面的脚本，基于手动Monte-Carlo Dropout的方法，取出每一条数据的uncertainty
+
+```bash
+MODEL_PATH="/path/to/original/llama_model_dir"
+TRAIN_FILE="/path/to/your/infer_file_path"
+OUTPUT_FILE="/path/to/your/output_file_path"
+OUTPUT_DIR="UNUSED"
+
+
+rm -rf $OUTPUT_FILE
+
+accelerate launch --mixed_precision bf16 eval/fetch_uncertainty.py \
+    --model_name_or_path $MODEL_PATH \
+    --tokenizer_name $MODEL_PATH \
+    --use_slow_tokenizer \
+    --train_file $TRAIN_FILE \
+    --max_seq_length 2048 \
+    --preprocessing_num_workers 16 \
+    --per_device_train_batch_size $BATCH_SIZE_PER_GPU \
+    --gradient_accumulation_steps $GRADIENT_ACC_STEPS \
+    --learning_rate 2e-5 \
+    --lr_scheduler_type linear \
+    --warmup_ratio 0.03 \
+    --weight_decay 0. \
+    --num_train_epochs 1 \
+    --output_dir $OUTPUT_DIR \
+    --with_tracking \
+    --report_to tensorboard \
+    --logging_steps 1 \
+    --output_grad_file $OUTPUT_FILE
+```
+
 ## 引用
 
 如果你觉得该仓库有用，你也不需要引用任何的论文或者链接，如果你实在过意不去，那你可以往这个支付宝账号发个红包：2745580384@qq.com
